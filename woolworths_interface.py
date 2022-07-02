@@ -23,8 +23,15 @@ class woolworths_api:
     items: dict
     config: dict
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
+        # Attempt to load the config from config_real.toml, which isn't checked into source control.
+        # Failing that, load the example config file.
+        try:
+            with open("config_real.toml") as f:
+                self.config = toml.load(f)
+        except FileNotFoundError:
+            with open("config.toml") as f:
+                self.config = toml.load(f)
 
     def __enter__(self):
         self.items = {}
@@ -102,19 +109,8 @@ class woolworths_api:
         self.items = r.json()["AvailableItems"]
         return True
 
-
-# Attempt to load the config from config_real.toml, which isn't checked into source control.
-# Failing that, load the example config file.
-try:
-    with open("config_real.toml") as f:
-        config = toml.load(f)
-except FileNotFoundError:
-    with open("config.toml") as f:
-        config = toml.load(f)
-
-
 if __name__ == "__main__":
-    with woolworths_api(config) as w:
+    with woolworths_api() as w:
         w.update_cart()
         print("Items in cart:")
         print("--------")

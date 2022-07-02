@@ -2,6 +2,8 @@
 
 This is a python interface to the woolworths.com.au website. It is intended to be a part of a system that automates grocery ordering from Grocy. This interface is not very robust. It depends on a selenium webdriver instance logging into the page to cache cookies, because the API depends on them. The initial login may require a 2FA SMS code. I suggest you do this interactively in a browser, extract the cookies from your browser storage and paste it into `cookies.json` to bootstrap the login. This cache will be overwritten with every interface login to keep things fresh.
 
+This interface is unsanctioned and may break at any moment.
+
 ## Configuration
 
 Copy `config.toml` to `config_real.toml`. Edit the values in `config_real.toml` so you don't accidentally check your secrets into source control.
@@ -25,5 +27,25 @@ You'll need to set up a webdriver server. This can be done easily with docker-co
     restart: unless-stopped
 ```
 
+## Usage
 
+```python
+    with woolworths_api() as w:
+        w.update_cart()
+        print("Items in cart:")
+        print("--------")
+        for item in w.items:
+            print(f"{item['Quantity']} x {item['Name']}")
+        print("--------")
+        w.add_stockcode_to_cart(41285, 2)  # Some margarine
+        w.add_stockcode_to_cart(500187, 2)  # Some cheese
+        w.update_cart()
+
+        print("Items in cart:")
+        print("--------")
+        for item in w.items:
+            print(f"{item['Quantity']} x {item['Name']}")
+        print("--------")
+
+```
 
