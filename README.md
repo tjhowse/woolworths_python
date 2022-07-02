@@ -49,3 +49,4 @@ You'll need to set up a webdriver server. This can be done easily with docker-co
 
 ```
 
+It seems like one account can have multiple shopping carts. My intent is to have my automation populate the shopping list, but then require a human interaction to actually commit to buying the cart and arranging the shopping. I think there's something about the initial cookie bootstrapping that associates a shopping cart with a browser session. One of the cookies might be a cart ID.

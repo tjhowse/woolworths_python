@@ -50,11 +50,11 @@ class woolworths_api:
 
     def __exit__(self, exc_type, exc_value, traceback):
         # TODO Consider logging out.
-        # r = self.s.post('https://www.woolworths.com.au/apis/ui/Logout')
-        # if r.status_code != 200 or not r.json()['Success']:
-        #     print("Logout failed:")
-        #     print(r.text)
-        #     exit(1)
+        r = self.s.post('https://www.woolworths.com.au/apis/ui/Logout')
+        if r.status_code != 200 or not r.json()['Success']:
+            print("Logout failed:")
+            print(r.text)
+            exit(1)
         print("Logged out of the API")
 
     # Add an item to the shopping cart
@@ -87,16 +87,7 @@ class woolworths_api:
 
     # Remove an item from the cart
     def remove_stockcode_from_cart(self, stockcode):
-        payload = {"Stockcode": stockcode, "evaluateRewardPoints": False}
-        r = self.s.post(
-            "https://www.woolworths.com.au/apis/ui/Trolley/Remove",
-            json=json.dumps(payload),
-        )
-        if r.status_code != 200:
-            print("Remove failed:")
-            print(r.text)
-            return False
-        return True
+        return self.add_stockcode_to_cart(stockcode, 0)
 
     # Read the current contents of the shopping cart
     def update_cart(self):
@@ -119,6 +110,14 @@ if __name__ == "__main__":
         print("--------")
         w.add_stockcode_to_cart(41285, 2)  # Some margarine
         w.add_stockcode_to_cart(500187, 2)  # Some cheese
+        w.update_cart()
+
+        print("Items in cart:")
+        print("--------")
+        for item in w.items:
+            print(f"{item['Quantity']} x {item['Name']}")
+        print("--------")
+        w.remove_stockcode_from_cart(500187)
         w.update_cart()
 
         print("Items in cart:")
