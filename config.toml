@@ -1,0 +1,3 @@
+username = "email@domain.com"
+password = "hunter7"
+webdriver_url = "http://localhost:4444"
